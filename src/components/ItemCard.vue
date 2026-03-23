@@ -1,12 +1,25 @@
-<script setup>
-defineProps({
-  item: {
-    type: Object,
-    required: true
-  }
-})
+<script setup lang="ts">
+type Item = {
+  id: number,
+  name: string,
+  type: 'Weapon' | 'Armor' | 'Consumable',
+  rarity: number,
+  equipped: boolean,
+  effects: Effect[]
+}
 
-const emit = defineEmits(['equip', 'unequip']);
+type Effect = {
+  stat: string,
+  value: number
+}
+
+defineProps<{ item: Item }>()
+
+const emit = defineEmits<{
+  (e: 'equip', id: number): void
+  (e: 'unequip', id: number): void
+}>()
+
 </script>
 
 <template>
