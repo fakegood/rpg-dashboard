@@ -1,5 +1,6 @@
 <script setup>
 import {computed, ref} from 'vue';
+import ItemCard from './components/ItemCard.vue';
 
 const title = 'RPG Dashboard'
 const subtitle = 'Welcome, Hero'
@@ -26,6 +27,12 @@ const totalDamage = computed(() => (strength.value * 2) + weaponDamage.value + c
 const criticalChance = computed(() => (agility.value * 0.5) + classBonusCritical());
 
 const availableClasses = ['Knight', 'Magician', 'Archer'];
+
+const inventory = ref([
+  {id: 1, name: 'Sword', type: 'Weapon', rarity: 0, equipped: false, effects: [{stat: 'weaponDamage', value: 5}]},
+  {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defence', value: 1}]},
+  {id: 3, name: 'HP Potion', type: 'Consumable', rarity: 0, equipped: false, effects: [{stat: 'hp', value: 10}]}
+]);
 
 function takeDamage() {
   hp.value -= damageValue;
@@ -92,6 +99,24 @@ function classBonusCritical() {
       return 0;
   }
 }
+
+function equipItem(itemId) {
+  for (let i = 0; i < inventory.value.length; i++) {
+    if (inventory.value[i].id === itemId) {
+      inventory.value[i].equipped = true;
+      break;
+    }
+  }
+}
+
+function unequipItem(itemId) {
+  for (let i = 0; i < inventory.value.length; i++) {
+    if (inventory.value[i].id === itemId) {
+      inventory.value[i].equipped = false;
+      break;
+    }
+  }
+}
 </script>
 
 <template>
@@ -115,9 +140,9 @@ function classBonusCritical() {
 
     <p>{{ characterName }} the {{ selectedClass }} enters the {{ startingZone }}</p>
     <p>Stats:</p>
-    <p>Str: {{strength}}</p>
-    <p>Agi: {{agility}}</p>
-    <p>Weapon: {{ weaponDamage}}</p>
+    <p>Str: {{ strength }}</p>
+    <p>Agi: {{ agility }}</p>
+    <p>Weapon: {{ weaponDamage }}</p>
     <p>Total Damage: {{ totalDamage }}</p>
     <p>Critical Chance: {{ criticalChance }}</p>
 
@@ -142,5 +167,11 @@ function classBonusCritical() {
     <button v-if="hp > 0" @click="regenMagic">Regen</button>
 
     <button @click="resetStats">Reset</button>
+
+    <hr/>
+    <h3>Inventory</h3>
+    <ul>
+      <ItemCard v-for="item in inventory" :key="item.id" :item="item" @equip="equipItem" @unequip="unequipItem"/>
+    </ul>
   </main>
 </template>
