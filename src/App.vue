@@ -1,6 +1,7 @@
 <script setup>
 import {computed, ref} from 'vue';
 import ItemCard from './components/ItemCard.vue';
+import ShopItemCard from "./components/ShopItemCard.vue";
 
 const title = 'RPG Dashboard'
 const subtitle = 'Welcome, Hero'
@@ -33,6 +34,39 @@ const inventory = ref([
   {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defence', value: 1}]},
   {id: 3, name: 'HP Potion', type: 'Consumable', rarity: 0, equipped: false, effects: [{stat: 'hp', value: 10}]}
 ]);
+
+const gold = ref(100);
+const shopInfo = ref('');
+
+const shopItems = ref([
+  {
+    id: 101,
+    name: 'Steel Sword',
+    type: 'Weapon',
+    rarity: 2,
+    equipped: false,
+    price: 40,
+    effects: [{stat: 'Weapon Damage', value: 10}]
+  },
+  {
+    id: 102,
+    name: 'Chain Armor',
+    type: 'Armor',
+    rarity: 2,
+    equipped: false,
+    price: 35,
+    effects: [{stat: 'Defense', value: 4}]
+  },
+  {
+    id: 103,
+    name: 'Mana Potion',
+    type: 'Consumable',
+    rarity: 1,
+    equipped: false,
+    price: 15,
+    effects: [{stat: 'MP', value: 20}]
+  }
+])
 
 function takeDamage() {
   hp.value -= damageValue;
@@ -117,6 +151,24 @@ function unequipItem(itemId) {
     }
   }
 }
+
+function buyItem(itemId) {
+  const item = shopItems.value.find(shopItem => shopItem.id === itemId)
+  if (!item) return;
+
+  if (gold.value < item.price) {
+    shopInfo.value = 'Not enough gold';
+    return;
+  }
+
+  inventory.value.push({
+    ...item,
+    id: Date.now()
+  });
+
+  gold.value -= item.price;
+  shopInfo.value = `Purchased ${item.name}`;
+}
 </script>
 
 <template>
@@ -167,6 +219,15 @@ function unequipItem(itemId) {
     <button v-if="hp > 0" @click="regenMagic">Regen</button>
 
     <button @click="resetStats">Reset</button>
+
+    <hr/>
+    <h3>Gold: {{ gold }}</h3>
+    <p v-if="shopInfo !== ''">{{shopInfo}}</p>
+    <h3>Shop</h3>
+    <ul>
+      <ShopItemCard v-for="shopItem in shopItems" :key="shopItem.id" :item="shopItem"
+                    :canAfford="shopItem.price <= gold" @buy="buyItem"/>
+    </ul>
 
     <hr/>
     <h3>Inventory</h3>
