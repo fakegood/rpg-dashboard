@@ -1,19 +1,8 @@
 <script setup lang="ts">
-type Item = {
-  id: number,
-  name: string,
-  type: 'Weapon' | 'Armor' | 'Consumable',
-  rarity: number,
-  equipped: boolean,
-  effects: Effect[]
-}
 
-type Effect = {
-  stat: string,
-  value: number
-}
+import {Item} from "../types/game";
 
-defineProps<{ item: Item }>()
+const props = defineProps<{ item: Item }>();
 
 const emit = defineEmits<{
   (e: 'equip', id: number): void
@@ -24,18 +13,18 @@ const emit = defineEmits<{
 
 <template>
   <li>
-    <strong>{{ item.name }}</strong>
-    - Type: {{ item.type }}
-    - Rarity: {{ item.rarity }}
-    <span v-if="item.equipped"> (Equipped)</span>
+    <strong>{{ props.item.name }}</strong>
+    - Type: {{ props.item.type }}
+    - Rarity: {{ props.item.rarity }}
+    <span v-if="props.item.equipped"> (Equipped)</span>
     <br/>
     <p>Affected Stats:</p>
     <ul>
-      <li v-for="(stat, index) in item.effects" :key="index">
+      <li v-for="(stat, index) in props.item.effects" :key="index">
         {{ stat.stat }}: {{ stat.value }}
       </li>
     </ul>
-    <button v-if="item.equipped === false && item.type !== 'Consumable'" @click="emit('equip', item.id)">Equip</button>
-    <button v-else-if="item.type !== 'Consumable'" @click="emit('unequip', item.id)">Unequip</button>
+    <button v-if="props.item.equipped === false && props.item.type !== 'Consumable'" @click="emit('equip', props.item.id)">Equip</button>
+    <button v-else-if="props.item.type !== 'Consumable'" @click="emit('unequip', props.item.id)">Unequip</button>
   </li>
 </template>

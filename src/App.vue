@@ -2,6 +2,9 @@
 import {computed, reactive, ref, watch} from 'vue';
 import ItemCard from './components/ItemCard.vue';
 import ShopItemCard from "./components/ShopItemCard.vue";
+import CreatePlayerForm from "./components/CreatePlayerForm.vue";
+import {Item, Player, Search, ShopItem} from "./types/game";
+import QuestBoard from "./components/QuestBoard.vue";
 
 const title = 'RPG Dashboard'
 const subtitle = 'Welcome, Hero'
@@ -14,19 +17,6 @@ const healValue = 10;
 const maxMp = 100;
 const magicCost = 10;
 const magicRegen = 10;
-
-const availableClasses = ['Knight', 'Magician', 'Archer'];
-
-type Player = {
-  name: string,
-  class: string,
-  hp: number,
-  mp: number,
-  strength: number,
-  agility: number,
-  baseDamage: number,
-  gold: number
-}
 
 const player = reactive<Player>({
   name: 'fakegood',
@@ -42,31 +32,11 @@ const player = reactive<Player>({
 const totalDamage = computed(() => (player.strength * 2) + player.baseDamage + classBonusDamage(player));
 const criticalChance = computed(() => (player.agility * 0.5) + classBonusCritical(player));
 
-type Item = {
-  id: number,
-  name: string,
-  type: 'Weapon' | 'Armor' | 'Consumable',
-  rarity: number,
-  equipped: boolean,
-  effects: Effect[]
-}
-
-type Effect = {
-  stat: string,
-  value: number
-}
-
 const inventory = ref<Item[]>([
   {id: 1, name: 'Sword', type: 'Weapon', rarity: 0, equipped: false, effects: [{stat: 'weaponDamage', value: 5}]},
   {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defence', value: 1}]},
   {id: 3, name: 'HP Potion', type: 'Consumable', rarity: 0, equipped: false, effects: [{stat: 'hp', value: 10}]}
 ]);
-
-type Search = {
-  keyword: string;
-  showEquippedOnly: boolean;
-  showConsumableOnly: boolean
-}
 
 const inventorySearch = reactive<Search>({
   keyword: '',
@@ -75,36 +45,28 @@ const inventorySearch = reactive<Search>({
 })
 
 const filteredInventory = computed(() => {
-      const searchValue = inventorySearch.keyword.toLowerCase();
-      if (!searchValue && !inventorySearch.showEquippedOnly && !inventorySearch.showConsumableOnly) {
-        return inventory.value;
-      }
+  const searchValue = inventorySearch.keyword.trim().toLowerCase();
+  if (!searchValue && !inventorySearch.showEquippedOnly && !inventorySearch.showConsumableOnly) {
+    return inventory.value;
+  }
 
-      return inventory.value.filter<Item[]>((item: Item) => {
-        if (inventorySearch.showEquippedOnly && inventorySearch.showConsumableOnly) {
-          return ((item.name.toLowerCase().includes(searchValue) && item.type.toLowerCase().includes('consumable')) && item.equipped)
-        } else if (inventorySearch.showConsumableOnly) {
-          return (item.name.toLowerCase().includes(searchValue) && item.type.toLowerCase().includes('consumable'))
-        } else if (inventorySearch.showEquippedOnly) {
-          return ((item.name.toLowerCase().includes(searchValue) || item.type.toLowerCase().includes(searchValue)) && item.equipped)
-        }
+  return inventory.value.filter((item: Item) => {
+    const matchesSearch =
+        !searchValue ||
+        item.name.toLowerCase().includes(searchValue) ||
+        item.type.toLowerCase().includes(searchValue)
 
-        return (item.name.toLowerCase().includes(searchValue) || item.type.toLowerCase().includes(searchValue))
-      });
-    })
-;
+    const matchesEquipped =
+        !inventorySearch.showEquippedOnly || item.equipped
+
+    const matchesConsumable =
+        !inventorySearch.showConsumableOnly || item.type === 'Consumable'
+
+    return matchesSearch && matchesEquipped && matchesConsumable
+  });
+});
 
 const shopInfo = ref('');
-
-type ShopItem = {
-  id: number,
-  name: string,
-  type: 'Weapon' | 'Armor' | 'Consumable',
-  rarity: number,
-  equipped: boolean,
-  price: number,
-  effects: Effect[]
-}
 
 const shopItems = ref<ShopItem[]>([
   {
@@ -135,6 +97,14 @@ const shopItems = ref<ShopItem[]>([
     effects: [{stat: 'MP', value: 20}]
   }
 ])
+
+function savePlayer(formPlayer: Player) {
+  player.name = formPlayer.name;
+  player.class = formPlayer.class;
+  player.strength = formPlayer.strength;
+  player.agility = formPlayer.agility;
+  player.baseDamage = formPlayer.baseDamage;
+}
 
 function takeDamage() {
   player.hp -= damageValue;
@@ -202,7 +172,7 @@ function classBonusCritical(target: Player) {
   }
 }
 
-function equipItem(itemId: Number) {
+function equipItem(itemId: number) {
   for (let i = 0; i < inventory.value.length; i++) {
     if (inventory.value[i].id === itemId) {
       inventory.value[i].equipped = true;
@@ -211,7 +181,7 @@ function equipItem(itemId: Number) {
   }
 }
 
-function unequipItem(itemId: Number) {
+function unequipItem(itemId: number) {
   for (let i = 0; i < inventory.value.length; i++) {
     if (inventory.value[i].id === itemId) {
       inventory.value[i].equipped = false;
@@ -220,8 +190,8 @@ function unequipItem(itemId: Number) {
   }
 }
 
-function buyItem(itemId: Number) {
-  const item = shopItems.value.find((shopItem: { id: Number; }) => shopItem.id === itemId)
+function buyItem(itemId: number) {
+  const item = shopItems.value.find((shopItem: ShopItem) => shopItem.id === itemId)
   if (!item) return;
 
   if (player.gold < item.price) {
@@ -263,19 +233,7 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
     <h1>{{ title }}</h1>
     <p>{{ subtitle }}</p>
 
-    <label>
-      Character Name:
-      <input v-model="player.name"/>
-    </label>
-
-    <label>
-      Character Class:
-      <select v-model="player.class">
-        <option v-for="option in availableClasses" :key="option" :value="option">
-          {{ option }}
-        </option>
-      </select>
-    </label>
+    <CreatePlayerForm :player="player" @save="savePlayer"/>
 
     <p>{{ player.name }} the {{ player.class }} enters the {{ startingZone }}</p>
     <p>Stats:</p>
@@ -306,6 +264,9 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
     <button v-if="player.hp > 0" @click="regenMagic">Regen</button>
 
     <button @click="resetStats">Reset</button>
+
+    <br/>
+    <QuestBoard/>
 
     <hr/>
     <h3>Gold: {{ player.gold }}</h3>
