@@ -294,3 +294,7 @@ code {
     border-right-color: var(--border);
   }
 }
+
+.status-success { color: green; }
+.status-warning { color: orange; }
+.status-error { color: red; }

@@ -67,6 +67,7 @@ const filteredInventory = computed(() => {
 });
 
 const shopInfo = ref('');
+const shopStatus = ref<'success' | 'error' | 'warning' | ''>('')
 
 const shopItems = ref<ShopItem[]>([
   {
@@ -195,7 +196,7 @@ function buyItem(itemId: number) {
   if (!item) return;
 
   if (player.gold < item.price) {
-    shopInfo.value = 'Not enough gold';
+    setShopMessage('Not enough gold', 'error');
     return;
   }
 
@@ -205,7 +206,18 @@ function buyItem(itemId: number) {
   });
 
   player.gold -= item.price;
-  shopInfo.value = `Purchased ${item.name}`;
+
+  setShopMessage(`Purchased ${item.name}`, 'success');
+}
+
+function setShopMessage(message: string, type: 'success' | 'error' | 'warning') {
+  shopInfo.value = message
+  shopStatus.value = type
+
+  setTimeout(() => {
+    shopInfo.value = ''
+    shopStatus.value = ''
+  }, 3000)
 }
 
 watch(() => player.hp,
@@ -244,24 +256,42 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
     <p>Critical Chance: {{ criticalChance }}</p>
 
     <p>HP: {{ player.hp }}</p>
+    <div style="background: #ccc; width: 200px;">
+      <div
+          :style="{
+        width: (player.hp / maxHp * 100) + '%',
+        background: 'red',
+        height: '10px'
+      }"
+      />
+    </div>
 
     <p v-if="player.hp > maxHp * 0.25">Alive</p>
     <p v-else-if="player.hp > 0">Critical</p>
     <p v-else>Dead</p>
 
     <button v-if="player.hp > 0" @click="takeDamage">Take Damage</button>
-    <button v-if="player.hp > 0" @click="heal">Heal</button>
+    <button v-if="player.hp > 0" :disabled="player.hp >= maxHp" @click="heal">Heal</button>
     <button v-if="player.hp === 0" @click="revive">Revive</button>
 
     <br>
     <br>
     <p>MP: {{ player.mp }}</p>
+    <div style="background: #ccc; width: 200px;">
+      <div
+          :style="{
+        width: (player.mp / maxMp * 100) + '%',
+        background: 'blue',
+        height: '10px'
+      }"
+      />
+    </div>
 
     <p v-if="player.mp <= 0">No Mana</p>
     <p v-else-if="player.mp <= maxMp * 0.25">Low Mana</p>
 
-    <button v-if="player.hp > 0" @click="useSkill">Use Skill</button>
-    <button v-if="player.hp > 0" @click="regenMagic">Regen</button>
+    <button v-if="player.hp > 0" :disabled="player.mp - magicCost <= 0" @click="useSkill">Use Skill</button>
+    <button v-if="player.hp > 0" :disabled="player.mp >= maxMp" @click="regenMagic">Regen</button>
 
     <button @click="resetStats">Reset</button>
 
@@ -270,7 +300,7 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
 
     <hr/>
     <h3>Gold: {{ player.gold }}</h3>
-    <p v-if="shopInfo !== ''">{{ shopInfo }}</p>
+    <p v-if="shopInfo !== ''" :class="`status-${shopStatus}`">{{ shopInfo }}</p>
     <h3>Shop</h3>
     <ul>
       <ShopItemCard v-for="shopItem in shopItems" :key="shopItem.id" :item="shopItem"
@@ -292,7 +322,7 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
     </label>
 
     <h3>Inventory</h3>
-    <p v-if="filteredInventory.length === 0">'{{ inventorySearch.keyword }}' cannot be found.</p>
+    <p v-if="filteredInventory.length === 0">No items match your filters</p>
     <ul>
       <ItemCard v-for="item in filteredInventory" :key="item.id" :item="item" @equip="equipItem"
                 @unequip="unequipItem"/>
