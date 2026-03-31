@@ -18,25 +18,55 @@ const maxMp = 100;
 const magicCost = 10;
 const magicRegen = 10;
 
-const player = reactive<Player>({
-  name: 'fakegood',
-  class: 'Knight',
-  hp: maxHp,
-  mp: maxMp,
-  strength: 12,
-  agility: 10,
-  baseDamage: 5,
-  gold: 100
-});
+const PLAYER_STORAGE_KEY = 'rpg-dashboard-player'
+const INVENTORY_STORAGE_KEY = 'rpg-dashboard-inventory'
+
+function loadStoredPlayer(): Player | null {
+  const raw = localStorage.getItem(PLAYER_STORAGE_KEY)
+  if (!raw) return null
+
+  try {
+    return JSON.parse(raw) as Player
+  } catch {
+    return null
+  }
+}
+
+function loadStoredInventory(): Item[] | null {
+  const raw = localStorage.getItem(INVENTORY_STORAGE_KEY)
+  if (!raw) return null
+
+  try {
+    return JSON.parse(raw) as Item[]
+  } catch {
+    return null
+  }
+}
+
+const storedPlayer = loadStoredPlayer()
+const storedInventory = loadStoredInventory()
+
+const player = reactive<Player>(storedPlayer ??
+    {
+      name: 'fakegood',
+      class: 'Knight',
+      hp: maxHp,
+      mp: maxMp,
+      strength: 12,
+      agility: 10,
+      baseDamage: 5,
+      gold: 100
+    });
 
 const totalDamage = computed(() => (player.strength * 2) + player.baseDamage + classBonusDamage(player));
 const criticalChance = computed(() => (player.agility * 0.5) + classBonusCritical(player));
 
-const inventory = ref<Item[]>([
-  {id: 1, name: 'Sword', type: 'Weapon', rarity: 0, equipped: false, effects: [{stat: 'weaponDamage', value: 5}]},
-  {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defence', value: 1}]},
-  {id: 3, name: 'HP Potion', type: 'Consumable', rarity: 0, equipped: false, effects: [{stat: 'hp', value: 10}]}
-]);
+const inventory = ref<Item[]>(storedInventory ??
+    [
+      {id: 1, name: 'Sword', type: 'Weapon', rarity: 0, equipped: false, effects: [{stat: 'weaponDamage', value: 5}]},
+      {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defence', value: 1}]},
+      {id: 3, name: 'HP Potion', type: 'Consumable', rarity: 0, equipped: false, effects: [{stat: 'hp', value: 10}]}
+    ]);
 
 const inventorySearch = reactive<Search>({
   keyword: '',
@@ -127,7 +157,7 @@ function died() {
 }
 
 function revive() {
-  player.hp = maxHp * 0.5;
+  player.hp = Math.floor(maxHp * 0.5);
 }
 
 function useSkill() {
@@ -231,17 +261,39 @@ watch(() => player.hp,
 watch(() => player.gold,
     (newValue: number) => {
       if (newValue < 20)
-        shopInfo.value = 'Gold is running low!';
+        setShopMessage('Gold is running low!', 'warning');
     }
 );
 
 watch(() => player.class, (newValue: string, oldValue: string) => {
-  shopInfo.value = `${player.name} changed class from ${oldValue} to ${newValue}`
+  setShopMessage(`${player.name} changed class from ${oldValue} to ${newValue}`, 'success');
 });
+
+watch(
+    player,
+    (newPlayer: Player) => {
+      localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(newPlayer))
+    },
+    {deep: true}
+);
+
+watch(
+    inventory,
+    (newInventory: Item[]) => {
+      localStorage.setItem(INVENTORY_STORAGE_KEY, JSON.stringify(newInventory))
+    },
+    {deep: true}
+);
+
+function clearSavedData() {
+  localStorage.removeItem(PLAYER_STORAGE_KEY)
+  localStorage.removeItem(INVENTORY_STORAGE_KEY)
+}
 </script>
 
 <template>
   <main>
+    <button @click="clearSavedData">Clear Save Data</button>
     <h1>{{ title }}</h1>
     <p>{{ subtitle }}</p>
 
@@ -256,7 +308,7 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
     <p>Critical Chance: {{ criticalChance }}</p>
 
     <p>HP: {{ player.hp }}</p>
-    <div style="background: #ccc; width: 200px;">
+    <div class="background-bar">
       <div
           :style="{
         width: (player.hp / maxHp * 100) + '%',
@@ -270,14 +322,14 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
     <p v-else-if="player.hp > 0">Critical</p>
     <p v-else>Dead</p>
 
-    <button v-if="player.hp > 0" @click="takeDamage">Take Damage</button>
-    <button v-if="player.hp > 0" :disabled="player.hp >= maxHp" @click="heal">Heal</button>
+    <button :disabled="player.hp <= 0" @click="takeDamage">Take Damage</button>
+    <button :disabled="player.hp >= maxHp" @click="heal">Heal</button>
     <button v-if="player.hp === 0" @click="revive">Revive</button>
 
     <br>
     <br>
     <p>MP: {{ player.mp }}</p>
-    <div style="background: #ccc; width: 200px;">
+    <div class="background-bar">
       <div
           :style="{
         width: (player.mp / maxMp * 100) + '%',
@@ -290,7 +342,7 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
     <p v-if="player.mp <= 0">No Mana</p>
     <p v-else-if="player.mp <= maxMp * 0.25">Low Mana</p>
 
-    <button v-if="player.hp > 0" :disabled="player.mp - magicCost <= 0" @click="useSkill">Use Skill</button>
+    <button v-if="player.hp > 0" :disabled="player.mp < magicCost" @click="useSkill">Use Skill</button>
     <button v-if="player.hp > 0" :disabled="player.mp >= maxMp" @click="regenMagic">Regen</button>
 
     <button @click="resetStats">Reset</button>
@@ -300,7 +352,7 @@ watch(() => player.class, (newValue: string, oldValue: string) => {
 
     <hr/>
     <h3>Gold: {{ player.gold }}</h3>
-    <p v-if="shopInfo !== ''" :class="`status-${shopStatus}`">{{ shopInfo }}</p>
+    <p v-if="shopInfo" :class="`status-${shopStatus}`">{{ shopInfo }}</p>
     <h3>Shop</h3>
     <ul>
       <ShopItemCard v-for="shopItem in shopItems" :key="shopItem.id" :item="shopItem"

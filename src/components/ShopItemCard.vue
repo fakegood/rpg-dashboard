@@ -12,6 +12,7 @@ const emit = defineEmits<{
   <li>
     <strong>{{ props.item.name }}</strong> - Type: {{ props.item.type }} - Rarity: {{ props.item.rarity }} | Price:
     {{ props.item.price }}
+    <p v-if="!props.canAfford"> (Not enough gold!)</p>
     <br/>
     <p>Affected Stats:</p>
     <ul>

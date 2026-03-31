@@ -298,3 +298,5 @@ code {
 .status-success { color: green; }
 .status-warning { color: orange; }
 .status-error { color: red; }
+
+.background-bar { background: #ccc; width: 200px; }
