@@ -1,4 +1,6 @@
-import {ref} from "vue";
+import {usePlayer} from "../composables/usePlayer";
+import {useInventory} from "../composables/useInventory";
+import {useShop} from "../composables/useShop";
 
 export type Player = {
     name: string,
