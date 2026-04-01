@@ -1,3 +1,5 @@
+import {ref} from "vue";
+
 export type Player = {
     name: string,
     class: string,
@@ -38,6 +40,3 @@ export type Quest = {
     title: string
     body: string
 }
-
-export const PLAYER_STORAGE_KEY = 'rpg-dashboard-player'
-export const INVENTORY_STORAGE_KEY = 'rpg-dashboard-inventory'

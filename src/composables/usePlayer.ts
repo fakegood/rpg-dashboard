@@ -1,7 +1,9 @@
-import {Player, PLAYER_STORAGE_KEY} from "../types/game";
+import {Player} from "../types/game";
 import {computed, reactive, ref, watch} from "vue";
 
 export function usePlayer() {
+    const PLAYER_STORAGE_KEY = 'rpg-dashboard-player'
+
     const maxHp = 100;
     const damageValue = 10;
     const healValue = 10;
@@ -116,6 +118,10 @@ export function usePlayer() {
         player.baseDamage = formPlayer.baseDamage;
     }
 
+    function resetPlayer() {
+        localStorage.removeItem(PLAYER_STORAGE_KEY)
+    }
+
     watch(
         player,
         (newPlayer: Player) => {
@@ -138,6 +144,7 @@ export function usePlayer() {
         regenMagic,
         resetStats,
         savePlayer,
-        useGold
+        useGold,
+        resetPlayer
     }
 }

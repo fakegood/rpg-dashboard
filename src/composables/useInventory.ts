@@ -1,7 +1,9 @@
 import {computed, reactive, ref, watch} from "vue";
-import {INVENTORY_STORAGE_KEY, Item, Search, ShopItem} from "../types/game";
+import {Item, Search, ShopItem} from "../types/game";
 
 export function useInventory() {
+    const INVENTORY_STORAGE_KEY = 'rpg-dashboard-inventory'
+
     function loadStoredInventory(): Item[] | null {
         const raw = localStorage.getItem(INVENTORY_STORAGE_KEY)
         if (!raw) return null
@@ -90,6 +92,10 @@ export function useInventory() {
         });
     }
 
+    function clearInventory() {
+        localStorage.removeItem(INVENTORY_STORAGE_KEY);
+    }
+
     watch(
         inventory,
         (newInventory: Item[]) => {
@@ -104,6 +110,7 @@ export function useInventory() {
         inventorySearch,
         equipItem,
         unequipItem,
-        addItem
+        addItem,
+        clearInventory
     }
 }

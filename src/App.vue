@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {ref, watch} from 'vue';
+import {watch} from 'vue';
 import ItemCard from './components/ItemCard.vue';
 import ShopItemCard from "./components/ShopItemCard.vue";
 import CreatePlayerForm from "./components/CreatePlayerForm.vue";
-import {INVENTORY_STORAGE_KEY, Item, Player, PLAYER_STORAGE_KEY, Search, ShopItem} from "./types/game";
 import QuestBoard from "./components/QuestBoard.vue";
 import {usePlayer} from "./composables/usePlayer"
 import {useInventory} from "./composables/useInventory";
+import {useShop} from "./composables/useShop";
 
 const title = 'RPG Dashboard'
 const subtitle = 'Welcome, Hero'
@@ -15,65 +15,8 @@ const startingZone = 'Forgotten Forest'
 const localPlayer = usePlayer();
 const localInventory = useInventory();
 const filteredInventory = localInventory.filteredInventory
-
-const shopInfo = ref('');
-const shopStatus = ref<'success' | 'error' | 'warning' | ''>('')
-
-const shopItems = ref<ShopItem[]>([
-  {
-    id: 101,
-    name: 'Steel Sword',
-    type: 'Weapon',
-    rarity: 2,
-    equipped: false,
-    price: 40,
-    effects: [{stat: 'Weapon Damage', value: 10}]
-  },
-  {
-    id: 102,
-    name: 'Chain Armor',
-    type: 'Armor',
-    rarity: 2,
-    equipped: false,
-    price: 35,
-    effects: [{stat: 'Defense', value: 4}]
-  },
-  {
-    id: 103,
-    name: 'Mana Potion',
-    type: 'Consumable',
-    rarity: 1,
-    equipped: false,
-    price: 15,
-    effects: [{stat: 'MP', value: 20}]
-  }
-])
-
-function buyItem(itemId: number) {
-  const item = shopItems.value.find((shopItem: ShopItem) => shopItem.id === itemId)
-  if (!item) return;
-
-  if (localPlayer.player.gold < item.price) {
-    setShopMessage('Not enough gold', 'error');
-    return;
-  }
-
-  localInventory.addItem(item);
-
-  localPlayer.useGold(item.price);
-
-  setShopMessage(`Purchased ${item.name}`, 'success');
-}
-
-function setShopMessage(message: string, type: 'success' | 'error' | 'warning') {
-  shopInfo.value = message
-  shopStatus.value = type
-
-  setTimeout(() => {
-    shopInfo.value = ''
-    shopStatus.value = ''
-  }, 3000)
-}
+const localShop = useShop(localPlayer , localInventory);
+const shopItems = localShop.shopItems;
 
 watch(() => localPlayer.player.hp,
     (newValue: number, oldValue: number) => {
@@ -86,17 +29,17 @@ watch(() => localPlayer.player.hp,
 watch(() => localPlayer.player.gold,
     (newValue: number) => {
       if (newValue < 20)
-        setShopMessage('Gold is running low!', 'warning');
+        localShop.setShopMessage('Gold is running low!', 'warning');
     }
 );
 
 watch(() => localPlayer.player.class, (newValue: string, oldValue: string) => {
-  setShopMessage(`${localPlayer.player.name} changed class from ${oldValue} to ${newValue}`, 'success');
+  localShop.setShopMessage(`${localPlayer.player.name} changed class from ${oldValue} to ${newValue}`, 'success');
 });
 
 function clearSavedData() {
-  localStorage.removeItem(PLAYER_STORAGE_KEY)
-  localStorage.removeItem(INVENTORY_STORAGE_KEY)
+  localPlayer.resetPlayer();
+  localInventory.clearInventory();
 }
 </script>
 
@@ -161,11 +104,11 @@ function clearSavedData() {
 
     <hr/>
     <h3>Gold: {{ localPlayer.player.gold }}</h3>
-    <p v-if="shopInfo" :class="`status-${shopStatus}`">{{ shopInfo }}</p>
+    <p v-if="localShop.shopInfo" :class="`status-${localShop.shopStatus}`">{{ localShop.shopInfo }}</p>
     <h3>Shop</h3>
     <ul>
       <ShopItemCard v-for="shopItem in shopItems" :key="shopItem.id" :item="shopItem"
-                    :canAfford="shopItem.price <= localPlayer.player.gold" @buy="buyItem"/>
+                    :canAfford="shopItem.price <= localPlayer.player.gold" @buy="localShop.buyItem"/>
     </ul>
 
     <hr/>
