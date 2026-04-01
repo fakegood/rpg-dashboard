@@ -24,7 +24,7 @@ const emit = defineEmits<{
         {{ stat.stat }}: {{ stat.value }}
       </li>
     </ul>
-    <button v-if="props.item.equipped === false && props.item.type !== 'Consumable'" @click="emit('equip', props.item.id)">Equip</button>
+    <button v-if="!props.item.equipped && props.item.type !== 'Consumable'" @click="emit('equip', props.item.id)">Equip</button>
     <button v-else-if="props.item.type !== 'Consumable'" @click="emit('unequip', props.item.id)">Unequip</button>
   </li>
 </template>
