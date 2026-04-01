@@ -1,5 +1,5 @@
 import {Player} from "../types/game";
-import {computed, reactive, ref, watch} from "vue";
+import {computed, reactive, watch} from "vue";
 
 export function usePlayer() {
     const PLAYER_STORAGE_KEY = 'rpg-dashboard-player'
@@ -106,7 +106,7 @@ export function usePlayer() {
         }
     }
 
-    function useGold(amount: number) {
+    function spendGold(amount: number) {
         player.gold -= amount;
     }
 
@@ -118,7 +118,7 @@ export function usePlayer() {
         player.baseDamage = formPlayer.baseDamage;
     }
 
-    function resetPlayer() {
+    function clearPlayerData() {
         localStorage.removeItem(PLAYER_STORAGE_KEY)
     }
 
@@ -144,7 +144,7 @@ export function usePlayer() {
         regenMagic,
         resetStats,
         savePlayer,
-        useGold,
-        resetPlayer
+        spendGold,
+        clearPlayerData
     }
 }

@@ -1,18 +1,13 @@
 import {ref} from "vue";
 import {ShopItem} from "../types/game";
 
-type ShopPlayerDependency = {
-    player: {
-        gold: number
-    }
-    useGold: (amount: number) => void
-}
-
-type ShopInventoryDependency = {
+type UseShopDependency = {
+    getGold: ()=> number,
+    spendGold: (amount: number) => void
     addItem: (item: ShopItem) => void
 }
 
-export function useShop(player: ShopPlayerDependency, inventory: ShopInventoryDependency) {
+export function useShop(params: UseShopDependency) {
     const shopInfo = ref('');
     const shopStatus = ref<'success' | 'error' | 'warning' | ''>('')
 
@@ -47,17 +42,17 @@ export function useShop(player: ShopPlayerDependency, inventory: ShopInventoryDe
     ])
 
     function buyItem(itemId: number) {
-        const item = shopItems.value.find((shopItem: ShopItem) => shopItem.id === itemId)
+        const item = shopItems.value.find((shopItem) => shopItem.id === itemId)
         if (!item) return;
 
-        if (player.player.gold < item.price) {
+        if (params.getGold() < item.price) {
             setShopMessage('Not enough gold', 'error');
             return;
         }
 
-        inventory.addItem(item);
+        params.addItem(item);
 
-        player.useGold(item.price);
+        params.spendGold(item.price);
 
         setShopMessage(`Purchased ${item.name}`, 'success');
     }

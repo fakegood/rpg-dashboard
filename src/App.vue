@@ -15,7 +15,11 @@ const startingZone = 'Forgotten Forest'
 const localPlayer = usePlayer();
 const localInventory = useInventory();
 const filteredInventory = localInventory.filteredInventory
-const localShop = useShop(localPlayer , localInventory);
+const localShop = useShop({
+  getGold: () => localPlayer.player.gold,
+  spendGold: localPlayer.spendGold,
+  addItem: localInventory.addItem
+});
 const shopItems = localShop.shopItems;
 
 watch(() => localPlayer.player.hp,
@@ -38,8 +42,8 @@ watch(() => localPlayer.player.class, (newValue: string, oldValue: string) => {
 });
 
 function clearSavedData() {
-  localPlayer.resetPlayer();
-  localInventory.clearInventory();
+  localPlayer.clearPlayerData();
+  localInventory.clearInventoryData();
 }
 </script>
 
@@ -94,8 +98,12 @@ function clearSavedData() {
     <p v-if="localPlayer.player.mp <= 0">No Mana</p>
     <p v-else-if="localPlayer.player.mp <= localPlayer.maxMp * 0.25">Low Mana</p>
 
-    <button v-if="localPlayer.player.hp > 0" :disabled="localPlayer.player.mp < localPlayer.magicCost" @click="localPlayer.useSkill">Use Skill</button>
-    <button v-if="localPlayer.player.hp > 0" :disabled="localPlayer.player.mp >= localPlayer.maxMp" @click="localPlayer.regenMagic">Regen</button>
+    <button v-if="localPlayer.player.hp > 0" :disabled="localPlayer.player.mp < localPlayer.magicCost"
+            @click="localPlayer.useSkill">Use Skill
+    </button>
+    <button v-if="localPlayer.player.hp > 0" :disabled="localPlayer.player.mp >= localPlayer.maxMp"
+            @click="localPlayer.regenMagic">Regen
+    </button>
 
     <button @click="localPlayer.resetStats">Reset</button>
 

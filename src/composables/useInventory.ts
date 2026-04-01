@@ -92,7 +92,7 @@ export function useInventory() {
         });
     }
 
-    function clearInventory() {
+    function clearInventoryData() {
         localStorage.removeItem(INVENTORY_STORAGE_KEY);
     }
 
@@ -111,6 +111,6 @@ export function useInventory() {
         equipItem,
         unequipItem,
         addItem,
-        clearInventory
+        clearInventoryData
     }
 }
