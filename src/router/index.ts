@@ -3,6 +3,7 @@ import PlayerView from '../views/PlayerView.vue'
 import ShopView from '../views/ShopView.vue'
 import InventoryView from '../views/InventoryView.vue'
 import QuestView from '../views/QuestView.vue'
+import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -11,7 +12,8 @@ const router = createRouter({
         { path: '/player', component: PlayerView },
         { path: '/shop', component: ShopView },
         { path: '/inventory', component: InventoryView },
-        { path: '/quests', component: QuestView }
+        { path: '/quests', component: QuestView },
+        { path: '/:pathMatch(.*)*', component: NotFoundView }
     ]
 })
 

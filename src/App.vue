@@ -30,6 +30,7 @@ watch(() => localPlayer.player.class, (newValue: string, oldValue: string) => {
 function clearSavedData() {
   localPlayer.clearPlayerData();
   localInventory.clearInventoryData();
+  location.reload();
 }
 </script>
 
@@ -38,10 +39,10 @@ function clearSavedData() {
     <h1>RPG Dashboard</h1>
 
     <nav>
-      <RouterLink to="/player">Player</RouterLink>
-      <RouterLink to="/shop">Shop</RouterLink>
-      <RouterLink to="/inventory">Inventory</RouterLink>
-      <RouterLink to="/quests">Quests</RouterLink>
+      <RouterLink to="/player" class="nav-link">Player</RouterLink>
+      <RouterLink to="/shop" class="nav-link">Shop</RouterLink>
+      <RouterLink to="/inventory" class="nav-link">Inventory</RouterLink>
+      <RouterLink to="/quests" class="nav-link">Quests</RouterLink>
     </nav>
 
     <button @click="clearSavedData">Clear Save Data</button>

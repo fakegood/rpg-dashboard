@@ -5,5 +5,8 @@ import QuestBoard from "../components/QuestBoard.vue";
 </script>
 
 <template>
-  <QuestBoard/>
+  <section class="page">
+    <h2>Quest</h2>
+    <QuestBoard/>
+  </section>
 </template>

@@ -299,4 +299,42 @@ code {
 .status-warning { color: orange; }
 .status-error { color: red; }
 
-.background-bar { background: #ccc; width: 200px; }
+.nav-link {
+  margin-right: 12px;
+  text-decoration: none;
+  color: #444;
+}
+
+.router-link-exact-active {
+  font-weight: bold;
+  color: #42b883;
+}
+
+.page {
+  margin-top: 20px;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+.bar {
+  height: 10px;
+}
+
+.bar.hp {
+  background: red;
+}
+
+.bar.mp {
+  background: blue;
+}
+
+.bar-container {
+  background: #eee;
+}
+
+.empty-state {
+  color: #888;
+  font-style: italic;
+}
