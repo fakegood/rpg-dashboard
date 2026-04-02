@@ -1,20 +1,9 @@
 <script setup lang="ts">
 
 import ItemCard from "../components/ItemCard.vue";
-import type {usePlayer} from "../composables/usePlayer";
-import type {useInventory} from "../composables/useInventory";
-import type {useShop} from "../composables/useShop";
+import {useInventoryStore} from "../stores/inventory";
 
-type ViewProps = {
-  localPlayer: ReturnType<typeof usePlayer>
-  localInventory: ReturnType<typeof useInventory>
-  localShop: ReturnType<typeof useShop>
-  startingZone: string
-}
-
-const {
-  localInventory
-} = defineProps<ViewProps>()
+const localInventory = useInventoryStore();
 
 const filteredInventory = localInventory.filteredInventory;
 

@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import {watch} from 'vue';
-import {usePlayer} from "./composables/usePlayer"
-import {useInventory} from "./composables/useInventory";
-import {useShop} from "./composables/useShop";
+import {usePlayerStore} from "./stores/player";
+import {useInventoryStore} from "./stores/inventory";
+import {useShopStore} from "./stores/shop";
 
-const startingZone = 'Forgotten Forest'
-
-const localPlayer = usePlayer();
-const localInventory = useInventory();
-const localShop = useShop({
-  getGold: () => localPlayer.player.gold,
-  spendGold: localPlayer.spendGold,
-  addItem: localInventory.addItem
-});
+const localPlayer = usePlayerStore();
+const localInventory = useInventoryStore();
+const localShop = useShopStore();
 
 watch(() => localPlayer.player.hp,
     (newValue: number, oldValue: number) => {
@@ -52,13 +46,7 @@ function clearSavedData() {
 
     <button @click="clearSavedData">Clear Save Data</button>
 
-    <RouterView v-slot="{ Component }">
-      <component :is="Component"
-                 :local-player="localPlayer"
-                 :local-inventory="localInventory"
-                 :local-shop="localShop"
-                 :starting-zone="startingZone"/>
-    </RouterView>
+    <RouterView />
 
 
   </main>

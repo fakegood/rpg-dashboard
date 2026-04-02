@@ -42,3 +42,6 @@ export type Quest = {
     title: string
     body: string
 }
+
+export const INVENTORY_STORAGE_KEY = 'rpg-dashboard-inventory'
+export const PLAYER_STORAGE_KEY = 'rpg-dashboard-player'
