@@ -35,19 +35,24 @@ function clearSavedData() {
 </script>
 
 <template>
-  <main>
-    <h1>RPG Dashboard</h1>
+  <main class="app-shell">
+    <header class="app-header">
+      <h1>RPG Dashboard</h1>
 
-    <nav>
-      <RouterLink to="/player" class="nav-link">Player</RouterLink>
-      <RouterLink to="/shop" class="nav-link">Shop</RouterLink>
-      <RouterLink to="/inventory" class="nav-link">Inventory</RouterLink>
-      <RouterLink to="/quests" class="nav-link">Quests</RouterLink>
-    </nav>
+      <nav class="app-nav">
+        <RouterLink to="/player" class="nav-link">Player</RouterLink>
+        <RouterLink to="/shop" class="nav-link">Shop</RouterLink>
+        <RouterLink to="/inventory" class="nav-link">Inventory</RouterLink>
+        <RouterLink to="/quests" class="nav-link">Quests</RouterLink>
+      </nav>
 
-    <button @click="clearSavedData">Clear Save Data</button>
+      <button class="danger-button" @click="clearSavedData">Clear Save Data</button>
+    </header>
 
-    <RouterView />
+
+    <section class="page-shell">
+      <RouterView/>
+    </section>
 
 
   </main>
