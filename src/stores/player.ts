@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {Player, PLAYER_STORAGE_KEY} from "../types/game";
 import {computed, reactive, watch} from "vue";
+import {useInventoryStore} from "./inventory";
 
 export const usePlayerStore = defineStore('player', () => {
 
@@ -11,6 +12,8 @@ export const usePlayerStore = defineStore('player', () => {
     const maxMp = 100;
     const magicCost = 10;
     const magicRegen = 10;
+
+    const inventoryStore = useInventoryStore();
 
     function loadStoredPlayer(): Player | null {
         const raw = localStorage.getItem(PLAYER_STORAGE_KEY)
@@ -37,7 +40,7 @@ export const usePlayerStore = defineStore('player', () => {
             gold: 100
         });
 
-    const totalDamage = computed(() => (player.strength * 2) + player.baseDamage + classBonusDamage(player));
+    const totalDamage = computed(() => (player.strength * 2) + player.baseDamage + inventoryStore.equippedWeaponBonus + classBonusDamage(player));
     const criticalChance = computed(() => (player.agility * 0.5) + classBonusCritical(player));
 
     function takeDamage() {

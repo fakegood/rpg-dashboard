@@ -27,7 +27,7 @@ export function useInventory() {
                 equipped: false,
                 effects: [{stat: 'weaponDamage', value: 5}]
             },
-            {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defence', value: 1}]},
+            {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defense', value: 1}]},
             {
                 id: 3,
                 name: 'HP Potion',

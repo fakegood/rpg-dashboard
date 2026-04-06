@@ -19,7 +19,7 @@ export const useShopStore = defineStore('shop', () => {
             rarity: 2,
             equipped: false,
             price: 40,
-            effects: [{stat: 'Weapon Damage', value: 10}]
+            effects: [{stat: 'weaponDamage', value: 10}]
         },
         {
             id: 102,
@@ -28,7 +28,7 @@ export const useShopStore = defineStore('shop', () => {
             rarity: 2,
             equipped: false,
             price: 35,
-            effects: [{stat: 'Defense', value: 4}]
+            effects: [{stat: 'defense', value: 4}]
         },
         {
             id: 103,
@@ -37,7 +37,7 @@ export const useShopStore = defineStore('shop', () => {
             rarity: 1,
             equipped: false,
             price: 15,
-            effects: [{stat: 'MP', value: 20}]
+            effects: [{stat: 'mp', value: 20}]
         }
     ])
 

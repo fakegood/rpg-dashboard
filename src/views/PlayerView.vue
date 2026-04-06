@@ -4,9 +4,14 @@ import CreatePlayerForm from "../components/CreatePlayerForm.vue";
 import {usePlayerStore} from "../stores/player";
 import BasePanel from "../components/ui/BasePanel.vue";
 import ResourceBar from "../components/ui/ResourceBar.vue";
+import {useInventoryStore} from "../stores/inventory";
+import {computed} from "vue";
 
 const playerStore = usePlayerStore();
+const inventoryStore = useInventoryStore();
 const startingZone = 'Forgotten Forest'
+
+const equippedWeapon = computed(() => inventoryStore.findEquippedItem('Weapon'));
 </script>
 
 <template>
@@ -20,6 +25,7 @@ const startingZone = 'Forgotten Forest'
     <p>Base Damage: {{ playerStore.player.baseDamage }}</p>
     <p>Total Damage: {{ playerStore.totalDamage }}</p>
     <p>Critical Chance: {{ playerStore.criticalChance }}</p>
+    <p v-if="equippedWeapon">Weapon: {{ equippedWeapon.name }} +{{ inventoryStore.equippedWeaponBonus }}</p>
 
     <ResourceBar label="HP" :value="playerStore.player.hp" :max="playerStore.maxHp" variant="hp"/>
 

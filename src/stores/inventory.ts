@@ -27,7 +27,7 @@ export const useInventoryStore = defineStore('inventory', () => {
                 equipped: false,
                 effects: [{stat: 'weaponDamage', value: 5}]
             },
-            {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defence', value: 1}]},
+            {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defense', value: 1}]},
             {
                 id: 3,
                 name: 'HP Potion',
@@ -66,9 +66,33 @@ export const useInventoryStore = defineStore('inventory', () => {
         });
     });
 
+    function findEquippedItem(type: 'Weapon' | 'Armor' | 'Consumable') {
+        return inventory.value.find((item: Item) => item.equipped && item.type === type);
+    }
+
+    const equippedWeaponBonus = computed(() => {
+        const equippedWeapon = findEquippedItem('Weapon');
+
+        if (!equippedWeapon)
+            return 0;
+
+        const effects = equippedWeapon.effects.find((effect) => effect.stat === 'weaponDamage');
+
+        return effects ? effects.value : 0;
+    })
+
     function equipItem(itemId: number) {
         for (let i = 0; i < inventory.value.length; i++) {
             if (inventory.value[i].id === itemId) {
+
+                const itemType = inventory.value[i].type;
+                if (itemType !== 'Consumable') {
+                    const equippedType = findEquippedItem(itemType);
+                    if (equippedType) {
+                        equippedType.equipped = false;
+                    }
+                }
+
                 inventory.value[i].equipped = true;
                 break;
             }
@@ -108,6 +132,8 @@ export const useInventoryStore = defineStore('inventory', () => {
         inventory,
         filteredInventory,
         inventorySearch,
+        equippedWeaponBonus,
+        findEquippedItem,
         equipItem,
         unequipItem,
         addItem,
