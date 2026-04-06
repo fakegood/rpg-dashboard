@@ -6,7 +6,7 @@ import BasePanel from "../components/ui/BasePanel.vue";
 </script>
 
 <template>
-  <BasePanel title="Quest">
+  <BasePanel title="Quests">
     <QuestBoard/>
   </BasePanel>
 </template>

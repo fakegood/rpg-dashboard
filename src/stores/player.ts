@@ -112,6 +112,10 @@ export const usePlayerStore = defineStore('player', () => {
         player.gold -= amount;
     }
 
+    function earnGold(amount: number) {
+        player.gold += amount;
+    }
+
     function savePlayer(formPlayer: Player) {
         player.name = formPlayer.name;
         player.class = formPlayer.class;
@@ -147,6 +151,7 @@ export const usePlayerStore = defineStore('player', () => {
         resetStats,
         savePlayer,
         spendGold,
+        earnGold,
         clearPlayerData
     }
 })

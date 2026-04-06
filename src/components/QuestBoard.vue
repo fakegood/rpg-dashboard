@@ -1,29 +1,10 @@
 <script setup lang="ts">
 
-import {onMounted, ref} from "vue";
-import {Quest} from "../types/game";
+import {onMounted} from "vue";
+import {useQuestStore} from "../stores/quest";
+import StatusMessage from "./ui/StatusMessage.vue";
 
-const quests = ref<Quest[]>([]);
-const isLoading = ref(false);
-const loadError = ref('');
-
-async function loadQuests() {
-  isLoading.value = true;
-  loadError.value = '';
-
-  try {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=5');
-    if (!response.ok) {
-      throw new Error('Failed to fetch quests');
-    }
-
-    quests.value = await response.json();
-  } catch (error) {
-    loadError.value = error instanceof Error ? error.message : 'Unknown error';
-  } finally {
-    isLoading.value = false;
-  }
-}
+const questStore = useQuestStore();
 
 function truncate(value: string, length: number) {
   if (value.length > length) {
@@ -34,19 +15,27 @@ function truncate(value: string, length: number) {
 }
 
 onMounted(() => {
-  loadQuests();
+  if (questStore.quests.length === 0) {
+    questStore.loadQuests();
+  }
 });
 </script>
 
 <template>
-  <button @click="loadQuests">Refresh Quests</button>
+  <button @click="questStore.loadQuests">Refresh Quests</button>
 
-  <p v-if="isLoading">Loading Quests...</p>
-  <p v-else-if="loadError">{{ loadError }}</p>
+  <StatusMessage :message="questStore.questMessage" type="success"/>
+
+  <p v-if="questStore.isLoading">Loading Quests...</p>
+  <p v-else-if="questStore.loadError">{{ questStore.loadError }}</p>
+  <p v-else-if="questStore.quests.length === 0" class="empty-state">
+    No quests available.
+  </p>
   <ol v-else>
-    <li v-for="quest in quests" :key="quest.id">
+    <li v-for="quest in questStore.quests" :key="quest.id">
       <strong>{{ quest.title }}</strong>
       <p>{{ truncate(quest.body, 100) }}</p>
+      <button @click="questStore.completeQuest(quest.id)">Complete Quest</button>
     </li>
   </ol>
 </template>
