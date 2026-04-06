@@ -32,6 +32,15 @@ export const useShopStore = defineStore('shop', () => {
         },
         {
             id: 103,
+            name: 'HP Potion',
+            type: 'Consumable',
+            rarity: 1,
+            equipped: false,
+            price: 15,
+            effects: [{stat: 'hp', value: 10}]
+        },
+        {
+            id: 104,
             name: 'Mana Potion',
             type: 'Consumable',
             rarity: 1,

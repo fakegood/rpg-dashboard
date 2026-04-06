@@ -7,6 +7,7 @@ const props = defineProps<{ item: Item }>();
 const emit = defineEmits<{
   (e: 'equip', id: number): void
   (e: 'unequip', id: number): void
+  (e: 'use', id: number): void
 }>()
 
 </script>
@@ -24,7 +25,8 @@ const emit = defineEmits<{
         {{ stat.stat }}: {{ stat.value }}
       </li>
     </ul>
-    <button v-if="!props.item.equipped && props.item.type !== 'Consumable'" @click="emit('equip', props.item.id)">Equip</button>
-    <button v-else-if="props.item.type !== 'Consumable'" @click="emit('unequip', props.item.id)">Unequip</button>
+    <button v-if="props.item.type === 'Consumable'" @click="emit('use', props.item.id)">Use</button>
+    <button v-else-if="!props.item.equipped" @click="emit('equip', props.item.id)">Equip</button>
+    <button v-else @click="emit('unequip', props.item.id)">Unequip</button>
   </li>
 </template>

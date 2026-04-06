@@ -12,6 +12,7 @@ const inventoryStore = useInventoryStore();
 const startingZone = 'Forgotten Forest'
 
 const equippedWeapon = computed(() => inventoryStore.findEquippedItem('Weapon'));
+const equippedArmor = computed(() => inventoryStore.findEquippedItem('Armor'));
 </script>
 
 <template>
@@ -26,6 +27,7 @@ const equippedWeapon = computed(() => inventoryStore.findEquippedItem('Weapon'))
     <p>Total Damage: {{ playerStore.totalDamage }}</p>
     <p>Critical Chance: {{ playerStore.criticalChance }}</p>
     <p v-if="equippedWeapon">Weapon: {{ equippedWeapon.name }} +{{ inventoryStore.equippedWeaponBonus }}</p>
+    <p v-if="equippedArmor">Armor: {{ equippedArmor.name }} +{{ inventoryStore.equippedArmorBonus }}</p>
 
     <ResourceBar label="HP" :value="playerStore.player.hp" :max="playerStore.maxHp" variant="hp"/>
 
@@ -34,7 +36,6 @@ const equippedWeapon = computed(() => inventoryStore.findEquippedItem('Weapon'))
     <p v-else>Dead</p>
 
     <button :disabled="playerStore.player.hp <= 0" @click="playerStore.takeDamage">Take Damage</button>
-    <button :disabled="playerStore.player.hp >= playerStore.maxHp" @click="playerStore.heal">Heal</button>
     <button v-if="playerStore.player.hp === 0" @click="playerStore.revive">Revive</button>
 
     <br>
@@ -47,9 +48,6 @@ const equippedWeapon = computed(() => inventoryStore.findEquippedItem('Weapon'))
 
     <button v-if="playerStore.player.hp > 0" :disabled="playerStore.player.mp < playerStore.magicCost"
             @click="playerStore.useSkill">Use Skill
-    </button>
-    <button v-if="playerStore.player.hp > 0" :disabled="playerStore.player.mp >= playerStore.maxMp"
-            @click="playerStore.regenMagic">Regen
     </button>
 
     <button @click="playerStore.resetStats">Reset</button>

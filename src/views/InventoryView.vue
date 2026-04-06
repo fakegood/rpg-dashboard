@@ -30,7 +30,8 @@ const filteredInventory = localInventory.filteredInventory;
     <ul>
       <ItemCard v-for="item in filteredInventory" :key="item.id" :item="item"
                 @equip="localInventory.equipItem"
-                @unequip="localInventory.unequipItem"/>
+                @unequip="localInventory.unequipItem"
+                @use="localInventory.useConsumable"/>
     </ul>
   </BasePanel>
 </template>

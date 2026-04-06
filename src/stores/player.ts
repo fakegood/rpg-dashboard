@@ -7,11 +7,9 @@ export const usePlayerStore = defineStore('player', () => {
 
     const maxHp = 100;
     const damageValue = 10;
-    const healValue = 10;
 
     const maxMp = 100;
     const magicCost = 10;
-    const magicRegen = 10;
 
     const inventoryStore = useInventoryStore();
 
@@ -44,15 +42,16 @@ export const usePlayerStore = defineStore('player', () => {
     const criticalChance = computed(() => (player.agility * 0.5) + classBonusCritical(player));
 
     function takeDamage() {
-        player.hp -= damageValue;
+        const receivedDamage = Math.max(0, damageValue - inventoryStore.equippedArmorBonus);
+        player.hp -= receivedDamage;
         if (player.hp <= 0) {
             player.hp = 0;
             died();
         }
     }
 
-    function heal() {
-        player.hp += healValue;
+    function restoreHp(amount: number) {
+        player.hp += amount;
         if (player.hp > maxHp) {
             player.hp = maxHp;
         }
@@ -73,8 +72,8 @@ export const usePlayerStore = defineStore('player', () => {
         }
     }
 
-    function regenMagic() {
-        player.mp += magicRegen;
+    function restoreMp(amount: number) {
+        player.mp += amount;
         if (player.mp > maxMp) {
             player.mp = maxMp;
         }
@@ -141,10 +140,10 @@ export const usePlayerStore = defineStore('player', () => {
         maxMp,
         magicCost,
         takeDamage,
-        heal,
+        restoreHp,
         revive,
         useSkill,
-        regenMagic,
+        restoreMp,
         resetStats,
         savePlayer,
         spendGold,
