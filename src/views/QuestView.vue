@@ -1,12 +1,12 @@
 <script setup lang="ts">
 
 import QuestBoard from "../components/QuestBoard.vue";
+import BasePanel from "../components/ui/BasePanel.vue";
 
 </script>
 
 <template>
-  <section class="page">
-    <h2>Quest</h2>
+  <BasePanel title="Quest">
     <QuestBoard/>
-  </section>
+  </BasePanel>
 </template>

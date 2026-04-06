@@ -2,6 +2,7 @@
 
 import ItemCard from "../components/ItemCard.vue";
 import {useInventoryStore} from "../stores/inventory";
+import BasePanel from "../components/ui/BasePanel.vue";
 
 const localInventory = useInventoryStore();
 
@@ -10,8 +11,7 @@ const filteredInventory = localInventory.filteredInventory;
 </script>
 
 <template>
-  <section class="page">
-    <h2>Inventory</h2>
+  <BasePanel title="Inventory">
     <label>
       Search inventory:
       <input v-model="localInventory.inventorySearch.keyword" placeholder="Start typing to search inventory"/>
@@ -32,5 +32,5 @@ const filteredInventory = localInventory.filteredInventory;
                 @equip="localInventory.equipItem"
                 @unequip="localInventory.unequipItem"/>
     </ul>
-  </section>
+  </BasePanel>
 </template>
