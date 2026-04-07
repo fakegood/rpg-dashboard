@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {computed, reactive, ref, watch} from "vue";
 import {INVENTORY_STORAGE_KEY, Item, Search, ShopItem} from "../types/game";
 import {usePlayerStore} from "./player";
+import {ITEM_CATALOG} from "../data/items";
 
 export const useInventoryStore = defineStore('inventory', () => {
 
@@ -23,21 +24,13 @@ export const useInventoryStore = defineStore('inventory', () => {
     const inventory = ref<Item[]>(storedInventory ??
         [
             {
-                id: 1,
-                name: 'Sword',
-                type: 'Weapon',
-                rarity: 0,
-                equipped: false,
-                effects: [{stat: 'weaponDamage', value: 5}]
+                ...ITEM_CATALOG.steelSword, id: 1, equipped: false
             },
-            {id: 2, name: 'Armor', type: 'Armor', rarity: 0, equipped: false, effects: [{stat: 'defense', value: 1}]},
             {
-                id: 3,
-                name: 'HP Potion',
-                type: 'Consumable',
-                rarity: 0,
-                equipped: false,
-                effects: [{stat: 'hp', value: 10}]
+                ...ITEM_CATALOG.chainArmor, id: 2, equipped: false
+            },
+            {
+                ...ITEM_CATALOG.hpPotion, id: 3, equipped: false
             }
         ]);
 

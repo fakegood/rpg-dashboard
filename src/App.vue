@@ -44,6 +44,7 @@ function clearSavedData() {
         <RouterLink to="/shop" class="nav-link">Shop</RouterLink>
         <RouterLink to="/inventory" class="nav-link">Inventory</RouterLink>
         <RouterLink to="/quests" class="nav-link">Quests</RouterLink>
+        <RouterLink to="/battle" class="nav-link">Battle</RouterLink>
       </nav>
 
       <button class="danger-button" @click="clearSavedData">Clear Save Data</button>

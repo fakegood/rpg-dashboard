@@ -1,11 +1,14 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import {Quest} from "../types/game";
+import {Quest, ShopItem} from "../types/game";
 import {usePlayerStore} from "./player";
+import {useInventoryStore} from "./inventory";
+import {ITEM_CATALOG} from "../data/items";
 
 export const useQuestStore = defineStore('quest', () => {
 
     const playerStore = usePlayerStore();
+    const inventoryStore = useInventoryStore();
 
     const quests = ref<Quest[]>([]);
     const isLoading = ref(false);
@@ -30,20 +33,40 @@ export const useQuestStore = defineStore('quest', () => {
         }
     }
 
+    function createQuestReward(item: ShopItem): ShopItem {
+        return {
+            ...item, price: 0
+        }
+    }
+
     function completeQuest(questId: number) {
         const quest = quests.value.find((quest) => quest.id === questId);
         if (!quest)
             return;
 
-        const questReward = quest.id;
+        const questReward = 20 + quest.id;
+        let rewardName = '';
         playerStore.earnGold(questReward);
 
+        if (quest.id % 2 === 1) {
+            const questItemReward = createQuestReward(ITEM_CATALOG.hpPotion);
+            inventoryStore.addItem(questItemReward);
+            rewardName = questItemReward.name;
+        } else {
+            const questItemReward = createQuestReward(ITEM_CATALOG.manaPotion);
+            inventoryStore.addItem(questItemReward);
+            rewardName = questItemReward.name;
+        }
+
         quests.value = quests.value.filter((quest) => quest.id !== questId);
-        setCompleteMessage(quest);
+        setCompleteMessage(quest.title, questReward, rewardName);
     }
 
-    function setCompleteMessage(quest: Quest) {
-        questMessage.value = `Completed quest ${quest.title}, received ${quest.id} gold(s).`;
+    function setCompleteMessage(questName: string, rewardAmount: number, additionalReward: string) {
+        if (additionalReward)
+            questMessage.value = `Completed quest ${questName}, received ${rewardAmount} gold(s) and ${additionalReward}`;
+        else
+            questMessage.value = `Completed quest ${questName}, received ${rewardAmount} gold(s).`;
         setTimeout(() => questMessage.value = '', 3000);
     }
 

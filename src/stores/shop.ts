@@ -3,6 +3,7 @@ import {ref} from "vue";
 import {ShopItem} from "../types/game";
 import {usePlayerStore} from "./player";
 import {useInventoryStore} from "./inventory";
+import {ITEM_CATALOG} from "../data/items";
 
 export const useShopStore = defineStore('shop', () => {
     const playerStore = usePlayerStore();
@@ -12,42 +13,10 @@ export const useShopStore = defineStore('shop', () => {
     const shopStatus = ref<'success' | 'error' | 'warning' | ''>('')
 
     const shopItems = ref<ShopItem[]>([
-        {
-            id: 101,
-            name: 'Steel Sword',
-            type: 'Weapon',
-            rarity: 2,
-            equipped: false,
-            price: 40,
-            effects: [{stat: 'weaponDamage', value: 10}]
-        },
-        {
-            id: 102,
-            name: 'Chain Armor',
-            type: 'Armor',
-            rarity: 2,
-            equipped: false,
-            price: 35,
-            effects: [{stat: 'defense', value: 4}]
-        },
-        {
-            id: 103,
-            name: 'HP Potion',
-            type: 'Consumable',
-            rarity: 1,
-            equipped: false,
-            price: 15,
-            effects: [{stat: 'hp', value: 10}]
-        },
-        {
-            id: 104,
-            name: 'Mana Potion',
-            type: 'Consumable',
-            rarity: 1,
-            equipped: false,
-            price: 15,
-            effects: [{stat: 'mp', value: 20}]
-        }
+        {...ITEM_CATALOG.steelSword},
+        {...ITEM_CATALOG.chainArmor},
+        {...ITEM_CATALOG.hpPotion},
+        {...ITEM_CATALOG.manaPotion},
     ])
 
     function buyItem(itemId: number) {

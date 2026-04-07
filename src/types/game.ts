@@ -2,15 +2,19 @@ import {usePlayer} from "../composables/usePlayer";
 import {useInventory} from "../composables/useInventory";
 import {useShop} from "../composables/useShop";
 
-export type Player = {
+export type Player = Unit & {
+    gold: number
+}
+
+export type Unit = {
     name: string,
-    class: string,
+    class: 'Knight' | 'Archer' | 'Magician',
     hp: number,
     mp: number,
     strength: number,
     agility: number,
     baseDamage: number,
-    gold: number
+    state: 'Idle' | 'Dead'
 }
 
 export type Item = {

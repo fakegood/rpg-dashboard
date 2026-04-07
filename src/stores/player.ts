@@ -6,7 +6,6 @@ import {useInventoryStore} from "./inventory";
 export const usePlayerStore = defineStore('player', () => {
 
     const maxHp = 100;
-    const damageValue = 10;
 
     const maxMp = 100;
     const magicCost = 10;
@@ -35,13 +34,14 @@ export const usePlayerStore = defineStore('player', () => {
             strength: 12,
             agility: 10,
             baseDamage: 5,
-            gold: 100
+            gold: 100,
+            state: 'Idle'
         });
 
     const totalDamage = computed(() => (player.strength * 2) + player.baseDamage + inventoryStore.equippedWeaponBonus + classBonusDamage(player));
     const criticalChance = computed(() => (player.agility * 0.5) + classBonusCritical(player));
 
-    function takeDamage() {
+    function takeDamage(damageValue: number) {
         const receivedDamage = Math.max(0, damageValue - inventoryStore.equippedArmorBonus);
         player.hp -= receivedDamage;
         if (player.hp <= 0) {
@@ -62,7 +62,7 @@ export const usePlayerStore = defineStore('player', () => {
     }
 
     function revive() {
-        player.hp = Math.floor(maxHp * 0.5);
+        player.hp = maxHp;
     }
 
     function useSkill() {
