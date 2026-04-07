@@ -115,7 +115,7 @@ export const useInventoryStore = defineStore('inventory', () => {
         }
     }
 
-    function addItem(item: ShopItem) {
+    function addItem(item: Item) {
         const {id, ...rest} = item;
         inventory.value.push({
             ...rest,

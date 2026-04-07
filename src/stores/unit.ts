@@ -1,7 +1,7 @@
-import {Unit} from "../types/game";
+import {Item, Unit} from "../types/game";
 import {computed, ref} from "vue";
 
-export function createUnit(unitName: string, hp: number, mp: number) {
+export function createUnit(unitName: string, hp: number, mp: number, inventory: Item[]) {
 
     const maxHp = hp;
     const maxMp = mp;
@@ -16,6 +16,8 @@ export function createUnit(unitName: string, hp: number, mp: number) {
         baseDamage: 10,
         state: 'Idle',
     });
+
+    const unitInventory = computed(() => inventory);
 
     const totalDamage = computed(() => unit.value.baseDamage);
 
@@ -44,6 +46,7 @@ export function createUnit(unitName: string, hp: number, mp: number) {
         totalDamage,
         maxHp,
         maxMp,
+        unitInventory,
         heal,
         applyDamage,
         revive
