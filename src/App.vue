@@ -3,10 +3,14 @@ import {watch} from 'vue';
 import {usePlayerStore} from "./stores/player";
 import {useInventoryStore} from "./stores/inventory";
 import {useShopStore} from "./stores/shop";
+import {useQuestStore} from "./stores/quest";
+import {useBattleStore} from "./stores/battle";
 
 const localPlayer = usePlayerStore();
 const localInventory = useInventoryStore();
 const localShop = useShopStore();
+const localQuest = useQuestStore();
+const localBattle = useBattleStore();
 
 watch(() => localPlayer.player.hp,
     (newValue: number, oldValue: number) => {
@@ -30,7 +34,9 @@ watch(() => localPlayer.player.class, (newValue: string, oldValue: string) => {
 function clearSavedData() {
   localPlayer.clearPlayerData();
   localInventory.clearInventoryData();
-  location.reload();
+  localQuest.resetQuestState();
+  localBattle.resetBattleState();
+  localShop.resetShopState();
 }
 </script>
 

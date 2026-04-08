@@ -23,10 +23,13 @@ export const usePlayerStore = defineStore('player', () => {
         }
     }
 
-    const storedPlayer = loadStoredPlayer()
+    const player = reactive<Player>(loadStoredPlayer() ?? createDefaultPlayer());
 
-    const player = reactive<Player>(storedPlayer ??
-        {
+    const totalDamage = computed(() => (player.strength * 2) + player.baseDamage + inventoryStore.equippedWeaponBonus + classBonusDamage(player));
+    const criticalChance = computed(() => (player.agility * 0.5) + classBonusCritical(player));
+
+    function createDefaultPlayer(): Player {
+        return {
             name: 'fakegood',
             class: 'Knight',
             hp: maxHp,
@@ -36,10 +39,8 @@ export const usePlayerStore = defineStore('player', () => {
             baseDamage: 5,
             gold: 100,
             state: 'Idle'
-        });
-
-    const totalDamage = computed(() => (player.strength * 2) + player.baseDamage + inventoryStore.equippedWeaponBonus + classBonusDamage(player));
-    const criticalChance = computed(() => (player.agility * 0.5) + classBonusCritical(player));
+        }
+    }
 
     function takeDamage(damageValue: number) {
         const receivedDamage = Math.max(0, damageValue - inventoryStore.equippedArmorBonus);
@@ -126,6 +127,11 @@ export const usePlayerStore = defineStore('player', () => {
 
     function clearPlayerData() {
         localStorage.removeItem(PLAYER_STORAGE_KEY)
+        resetPlayerState();
+    }
+
+    function resetPlayerState(){
+        Object.assign(player, createDefaultPlayer());
     }
 
     watch(
@@ -152,6 +158,7 @@ export const usePlayerStore = defineStore('player', () => {
         savePlayer,
         spendGold,
         earnGold,
-        clearPlayerData
+        clearPlayerData,
+        resetPlayerState
     }
 })

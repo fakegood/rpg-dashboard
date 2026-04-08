@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import {Quest, ShopItem} from "../types/game";
+import type {Quest, ShopItem} from "../types/game";
 import {usePlayerStore} from "./player";
 import {useInventoryStore} from "./inventory";
 import {ITEM_CATALOG} from "../data/items";
@@ -70,6 +70,13 @@ export const useQuestStore = defineStore('quest', () => {
         setTimeout(() => questMessage.value = '', 3000);
     }
 
+    function resetQuestState() {
+        quests.value = [];
+        isLoading.value = false;
+        loadError.value = '';
+        questMessage.value = '';
+    }
+
     return {
         quests,
         isLoading,
@@ -77,5 +84,6 @@ export const useQuestStore = defineStore('quest', () => {
         questMessage,
         loadQuests,
         completeQuest,
+        resetQuestState,
     }
 })

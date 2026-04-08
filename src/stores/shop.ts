@@ -45,11 +45,17 @@ export const useShopStore = defineStore('shop', () => {
         }, 3000)
     }
 
+    function resetShopState() {
+        shopInfo.value = '';
+        shopStatus.value = '';
+    }
+
     return {
         shopItems,
         shopInfo,
         shopStatus,
         buyItem,
-        setShopMessage
+        setShopMessage,
+        resetShopState
     }
 });

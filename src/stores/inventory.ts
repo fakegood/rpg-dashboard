@@ -19,20 +19,15 @@ export const useInventoryStore = defineStore('inventory', () => {
         }
     }
 
-    const storedInventory = loadStoredInventory()
+    const inventory = ref<Item[]>(loadStoredInventory() ?? createDefaultInventory());
 
-    const inventory = ref<Item[]>(storedInventory ??
-        [
-            {
-                ...ITEM_CATALOG.steelSword, id: 1, equipped: false
-            },
-            {
-                ...ITEM_CATALOG.chainArmor, id: 2, equipped: false
-            },
-            {
-                ...ITEM_CATALOG.hpPotion, id: 3, equipped: false
-            }
-        ]);
+    function createDefaultInventory(): Item[] {
+        return [
+            { ...ITEM_CATALOG.steelSword, id: 1, equipped: false },
+            { ...ITEM_CATALOG.chainArmor, id: 2, equipped: false },
+            { ...ITEM_CATALOG.hpPotion, id: 3, equipped: false }
+        ];
+    }
 
     const inventorySearch = reactive<Search>({
         keyword: '',
@@ -159,6 +154,14 @@ export const useInventoryStore = defineStore('inventory', () => {
 
     function clearInventoryData() {
         localStorage.removeItem(INVENTORY_STORAGE_KEY);
+        resetInventoryState();
+    }
+
+    function resetInventoryState() {
+        inventory.value = createDefaultInventory();
+        inventorySearch.keyword = '';
+        inventorySearch.showConsumableOnly = false;
+        inventorySearch.showEquippedOnly = false;
     }
 
     watch(

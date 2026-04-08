@@ -29,6 +29,7 @@ export const useBattleStore = defineStore('battle', () => {
         switch (battleState.value) {
             case 'Init':
                 battleResult.value = '';
+                battleMessage.value = '';
                 boss.value = createUnit("Abu", 100, 100, [{...ITEM_CATALOG.chainArmor}]);
                 playerStore.revive()
 
@@ -112,6 +113,13 @@ export const useBattleStore = defineStore('battle', () => {
             setBattleState('EnemyTurn');
     }
 
+    function resetBattleState() {
+        battleState.value = 'Init';
+        battleResult.value = '';
+        battleMessage.value = '';
+        boss.value = createUnit("Abu", 100, 100, [{ ...ITEM_CATALOG.chainArmor }]);
+    }
+
     return {
         playerStore,
         boss,
@@ -119,6 +127,7 @@ export const useBattleStore = defineStore('battle', () => {
         battleState,
         battleResult,
         battleMessage,
-        playerAction
+        playerAction,
+        resetBattleState
     }
 })
