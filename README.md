@@ -95,6 +95,135 @@ npm run dev
 
 ---
 
+## 📚 Learning Journey
+
+This project was built progressively through structured lessons, covering both core Vue fundamentals and real-world engineering practices.
+
+---
+
+### 🟢 Foundation (Lessons 1–10)
+
+1. Vue basics (templates, reactivity)
+2. `ref` vs `reactive`
+3. Event handling (`@click`)
+4. Conditional rendering (`v-if`)
+5. List rendering (`v-for`)
+6. Form binding (`v-model`)
+7. Computed properties
+8. Methods vs computed
+9. Basic component structure
+10. Props & emits
+
+---
+
+### 🟡 Component Architecture (Lessons 11–15)
+
+11. Parent → child communication
+12. Emitting events from child to parent
+13. Form component (`CreatePlayerForm`)
+14. Separation of concerns (logic vs UI)
+15. Structuring reusable components
+
+---
+
+### 🔵 TypeScript Integration (Lessons 16–18)
+
+16. Adding TypeScript to Vue project
+17. Defining interfaces (`Player`, `Item`, etc.)
+18. Strong typing for props and stores
+
+---
+
+### 🟣 State Management with Pinia (Lessons 19–23)
+
+19. Introduction to Pinia
+20. Creating the player store (`usePlayerStore`)
+21. Derived state (`computed`: totalDamage, criticalChance)
+22. Store actions (damage, heal, etc.)
+23. Cross-store interaction
+
+---
+
+### 🟠 Shop System (Lessons 24–26)
+
+24. Shop store implementation
+25. Buying items and handling gold
+26. User feedback (success/error states)
+
+---
+
+### 🟤 Inventory System (Lessons 27–29)
+
+27. Inventory store design
+28. Equip / unequip system
+29. Consumables (HP/MP usage logic)
+
+---
+
+### 🔴 Quest System (Lesson 30)
+
+30. Fetching quests from API and rewarding player
+
+---
+
+## 🚀 Advanced & Real-World Extensions
+
+---
+
+### ⚙️ Architecture & Data Design (Lesson 31–33)
+
+31. Centralized item catalog (`ITEM_CATALOG`)
+32. Eliminating duplication across shop, inventory, and quests
+33. Consistent data modeling across systems
+
+---
+
+### 🧩 UI Componentization (Lessons 34–35)
+
+34. Base UI components (`BasePanel`, `ResourceBar`, `StatusMessage`)
+35. Slots and reusable layout patterns
+
+---
+
+### 💾 Persistence & State Lifecycle (Lesson 36)
+
+36. LocalStorage integration
+- State hydration (load on init)
+- Automatic saving via watchers
+- Reset architecture without page reload
+
+---
+
+### 🎨 UI System Design (Lesson 37)
+
+37. Reusable UI controls
+- `BaseButton`
+- `StatRow`
+- Consistent UI patterns across views
+
+---
+
+### 🧪 Testing (Lesson 38)
+
+38. Unit testing with Vitest
+- Setting up testing environment (jsdom)
+- Testing Pinia stores
+- Validating business logic:
+  - consumables
+  - stat calculations
+  - quest rewards
+
+---
+
+### 🚀 Production Readiness (Lesson 39)
+
+39. Deployment & portfolio polish
+- README optimization
+- Project presentation for resume
+- Preparing for real-world showcase
+
+---
+
 ## 📄 License
 
 This project is for learning and portfolio purposes.
