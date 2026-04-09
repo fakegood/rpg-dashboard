@@ -6,6 +6,8 @@ import BasePanel from "../components/ui/BasePanel.vue";
 import ResourceBar from "../components/ui/ResourceBar.vue";
 import {useInventoryStore} from "../stores/inventory";
 import {computed} from "vue";
+import BaseButton from "../components/ui/BaseButton.vue";
+import StatRow from "../components/ui/StatRow.vue";
 
 const playerStore = usePlayerStore();
 const inventoryStore = useInventoryStore();
@@ -20,14 +22,14 @@ const equippedArmor = computed(() => inventoryStore.findEquippedItem('Armor'));
     <CreatePlayerForm :player="playerStore.player" @save="playerStore.savePlayer"/>
 
     <p>{{ playerStore.player.name }} the {{ playerStore.player.class }} enters the {{ startingZone }}</p>
-    <p>Stats:</p>
-    <p>Str: {{ playerStore.player.strength }}</p>
-    <p>Agi: {{ playerStore.player.agility }}</p>
-    <p>Base Damage: {{ playerStore.player.baseDamage }}</p>
-    <p>Total Damage: {{ playerStore.totalDamage }}</p>
-    <p>Critical Chance: {{ playerStore.criticalChance }}</p>
-    <p v-if="equippedWeapon">Weapon: {{ equippedWeapon.name }} +{{ inventoryStore.equippedWeaponBonus }}</p>
-    <p v-if="equippedArmor">Armor: {{ equippedArmor.name }} +{{ inventoryStore.equippedArmorBonus }}</p>
+    <h3>Stats</h3>
+    <StatRow label="Strength" :value="playerStore.player.strength"/>
+    <StatRow label="Agility" :value="playerStore.player.agility"/>
+    <StatRow label="Base Damage" :value="playerStore.player.baseDamage"/>
+    <StatRow label="Total Damage" :value="playerStore.totalDamage"/>
+    <StatRow label="Critical Chance" :value="playerStore.criticalChance"/>
+    <StatRow v-if="equippedWeapon" label="Weapon" :value="`${equippedWeapon.name} +${inventoryStore.equippedWeaponBonus}`"/>
+    <StatRow v-if="equippedArmor" label="Armor" :value="`${equippedArmor.name} +${inventoryStore.equippedArmorBonus}`"/>
 
     <ResourceBar label="HP" :value="playerStore.player.hp" :max="playerStore.maxHp" variant="hp"/>
 
@@ -35,8 +37,8 @@ const equippedArmor = computed(() => inventoryStore.findEquippedItem('Armor'));
     <p v-else-if="playerStore.player.hp > 0">Critical</p>
     <p v-else>Dead</p>
 
-    <button :disabled="playerStore.player.hp <= 0" @click="playerStore.takeDamage">Take Damage</button>
-    <button v-if="playerStore.player.hp === 0" @click="playerStore.revive">Revive</button>
+    <BaseButton :disabled="playerStore.player.hp <= 0" @click="playerStore.takeDamage">Take Damage</BaseButton>
+    <BaseButton v-if="playerStore.player.hp === 0" @click="playerStore.revive">Revive</BaseButton>
 
     <br>
     <br>
@@ -46,10 +48,10 @@ const equippedArmor = computed(() => inventoryStore.findEquippedItem('Armor'));
     <p v-if="playerStore.player.mp <= 0">No Mana</p>
     <p v-else-if="playerStore.player.mp <= playerStore.maxMp * 0.25">Low Mana</p>
 
-    <button v-if="playerStore.player.hp > 0" :disabled="playerStore.player.mp < playerStore.magicCost"
-            @click="playerStore.useSkill">Use Skill
-    </button>
+    <BaseButton v-if="playerStore.player.hp > 0" :disabled="playerStore.player.mp < playerStore.magicCost"
+                @click="playerStore.useSkill">Use Skill
+    </BaseButton>
 
-    <button @click="playerStore.resetStats">Reset</button>
+    <BaseButton @click="playerStore.resetStats">Reset</BaseButton>
   </BasePanel>
 </template>

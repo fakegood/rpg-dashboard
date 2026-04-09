@@ -5,6 +5,7 @@ import {useInventoryStore} from "./stores/inventory";
 import {useShopStore} from "./stores/shop";
 import {useQuestStore} from "./stores/quest";
 import {useBattleStore} from "./stores/battle";
+import BaseButton from "./components/ui/BaseButton.vue";
 
 const localPlayer = usePlayerStore();
 const localInventory = useInventoryStore();
@@ -53,7 +54,7 @@ function clearSavedData() {
         <RouterLink to="/battle" class="nav-link">Battle</RouterLink>
       </nav>
 
-      <button class="danger-button" @click="clearSavedData">Clear Save Data</button>
+      <BaseButton variant="danger" @click="clearSavedData">Clear Save Data</BaseButton>
     </header>
 
 

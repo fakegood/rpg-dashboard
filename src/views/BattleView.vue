@@ -4,6 +4,7 @@ import BasePanel from "../components/ui/BasePanel.vue";
 import {computed, onMounted} from "vue";
 import ResourceBar from "../components/ui/ResourceBar.vue";
 import StatusMessage from "../components/ui/StatusMessage.vue";
+import BaseButton from "../components/ui/BaseButton.vue";
 
 const battleStore = useBattleStore();
 
@@ -41,16 +42,16 @@ const isPlayerTurn = computed(() => battleStore.battleState === 'PlayerTurn');
         </tbody>
       </table>
 
-      <button v-if="isPlayerTurn" @click="battleStore.playerAction('Attack')">Attack</button>
-      <button v-if="isPlayerTurn" @click="battleStore.playerAction('RestoreHeal')">Heal HP</button>
-      <button v-if="isPlayerTurn" @click="battleStore.playerAction('RestoreMana')">Heal Mana</button>
-      <button v-if="isPlayerTurn" @click="battleStore.playerAction('Rest')">Rest</button>
+      <BaseButton v-if="isPlayerTurn" @click="battleStore.playerAction('Attack')">Attack</BaseButton>
+      <BaseButton v-if="isPlayerTurn" @click="battleStore.playerAction('RestoreHeal')">Heal HP</BaseButton>
+      <BaseButton v-if="isPlayerTurn" @click="battleStore.playerAction('RestoreMana')">Heal Mana</BaseButton>
+      <BaseButton v-if="isPlayerTurn" @click="battleStore.playerAction('Rest')">Rest</BaseButton>
     </div>
 
     <div v-if="battleStore.battleResult">
       <h1 v-if="battleStore.battleResult">{{ battleStore.battleResult }}</h1>
       <StatusMessage :message="battleStore.battleMessage" type="success"/>
-      <button @click="battleStore.init">Restart</button>
+      <BaseButton @click="battleStore.init">Restart</BaseButton>
     </div>
   </BasePanel>
 </template>

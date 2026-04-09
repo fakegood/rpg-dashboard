@@ -253,3 +253,55 @@ ul {
 li {
     margin-bottom: 10px;
 }
+
+.base-button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    margin-right: 8px;
+    margin-top: 8px;
+}
+
+.base-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+.base-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.base-button--primary {
+    background: #222;
+}
+
+.base-button--secondary {
+    background: #666;
+}
+
+.base-button--danger {
+    background: #b3261e;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.stat-row__label {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.stat-row__value {
+    color: var(--text-h);
+    font-weight: 600;
+}
