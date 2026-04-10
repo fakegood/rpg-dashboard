@@ -4,6 +4,11 @@ A modular RPG simulation dashboard built with **Vue 3 (Composition API)**, **Typ
 
 ---
 
+## 🚀 Live Demo
+👉 [Vercel](https://vue-rpg-dashboard.vercel.app)
+
+---
+
 ## ✨ Features
 
 - Player creation and stat system
