@@ -219,7 +219,6 @@ This project was built progressively through structured lessons, covering both c
 
 39. Deployment & portfolio polish
 - README optimization
-- Project presentation for resume
 - Preparing for real-world showcase
 
 ---
