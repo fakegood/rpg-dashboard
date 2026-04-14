@@ -42,23 +42,25 @@ function clearSavedData() {
 </script>
 
 <template>
-  <main class="app-shell">
-    <header class="app-header">
-      <h1>RPG Dashboard</h1>
+  <main class="min-h-screen bg-slate-100 px-6 py-8 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div class="mx-auto flex max-w-5xl flex-col gap-6">
+      <header class="flex flex-col gap-4">
+        <h1 class="text-4xl font-bold tracking-tight">RPG Dashboard</h1>
 
-      <nav class="app-nav">
-        <RouterLink to="/player" class="nav-link">Player</RouterLink>
-        <RouterLink to="/shop" class="nav-link">Shop</RouterLink>
-        <RouterLink to="/inventory" class="nav-link">Inventory</RouterLink>
-        <RouterLink to="/quests" class="nav-link">Quests</RouterLink>
-        <RouterLink to="/battle" class="nav-link">Battle</RouterLink>
-      </nav>
+        <nav class="flex flex-wrap gap-2">
+          <RouterLink to="/player" class="rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Player</RouterLink>
+          <RouterLink to="/shop" class="rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Shop</RouterLink>
+          <RouterLink to="/inventory" class="rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Inventory</RouterLink>
+          <RouterLink to="/quests" class="rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Quests</RouterLink>
+          <RouterLink to="/battle" class="rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Battle</RouterLink>
+        </nav>
 
-      <BaseButton variant="danger" @click="clearSavedData">Clear Save Data</BaseButton>
-    </header>
+        <BaseButton variant="danger" @click="clearSavedData">Clear Save Data</BaseButton>
+      </header>
+    </div>
 
 
-    <section class="page-shell">
+    <section class="flex flex-col gap-4">
       <RouterView/>
     </section>
 
